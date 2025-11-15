@@ -1,10 +1,11 @@
 const express = require('express');
 const LeadController = require('../controllers/leadController');
+const { validationMiddleware, schemas } = require('../middleware/validation');
 
 const router = express.Router();
 
 // POST /api/leads - Create new lead (main lead capture endpoint)
-router.post('/', LeadController.createLead);
+router.post('/', validationMiddleware(schemas.leadCreate), LeadController.createLead);
 
 // GET /api/leads - Get all leads with pagination and filtering
 router.get('/', LeadController.getLeads);
@@ -16,7 +17,7 @@ router.get('/stats', LeadController.getLeadStats);
 router.get('/:id', LeadController.getLead);
 
 // PUT /api/leads/:id - Update lead
-router.put('/:id', LeadController.updateLead);
+router.put('/:id', validationMiddleware(schemas.leadUpdate), LeadController.updateLead);
 
 // POST /api/leads/:id/score - Manually score lead
 router.post('/:id/score', LeadController.scoreLead);
