@@ -43,8 +43,14 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Import validation middleware
+const { validationMiddleware, schemas } = require('./middleware/validation');
+
 // API routes
+app.post('/api/leads', validationMiddleware(schemas.leadCreate), leadRoutes);
 app.use('/api/leads', leadRoutes);
+app.post('/api/touchpoints/start', validationMiddleware(schemas.startJourney), touchpointRoutes);
+app.post('/api/touchpoints', validationMiddleware(schemas.touchpointCreate), touchpointRoutes);
 app.use('/api/touchpoints', touchpointRoutes);
 app.use('/api/journeys', journeyRoutes);
 app.use('/api/assignment', assignmentRoutes);
